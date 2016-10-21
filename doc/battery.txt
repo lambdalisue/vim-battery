@@ -1,0 +1,178 @@
+*vim-battery.txt*		An async battery indicator
+
+Version: 0.1.0
+Author:  Alisue <lambdalisue@hashnote.net>
+Support: Vim 7.4 and above
+License: MIT license
+
+=============================================================================
+CONTENTS					*vim-battery-contents*
+
+Introduction			|vim-battery-introduction|
+Install				|vim-battery-install|
+Usage				|vim-battery-usage|
+Interface			|vim-battery-interface|
+  Commands			|vim-battery-commands|
+  Functions			|vim-battery-functions|
+  Variables			|vim-battery-variables|
+  Mappings			|vim-battery-mappings|
+
+
+=============================================================================
+INTRODUCTION					*vim-battery-introduction*
+
+*battery* is an asynchronous battery indicator which is used as a component of
+|statusline| or |tabline|. It uses job features in Vim/Neovim so it won't
+interrupt the Vim.
+
+Currently Only for Mac OS X. PR is welcome.
+
+
+=============================================================================
+USAGE						*vim-battery-usage*
+
+Use |battery#component()| to visualize the current battery status like
+>
+	set statusline=...%{battery#component()}...
+<
+Or with itchyny/lightline.vim
+>
+	let g:lightline = {
+	      \ 'tabline': {
+	      \   'left': [
+	      \     [ 'tabs' ],
+	      \   ],
+	      \   'right': [
+	      \     [ 'battery' ],
+	      \   ],
+	      \ },
+	      \ 'component_function': {
+	      \   'battery': 'battery#component',
+	      \ },
+	      \}
+<
+
+=============================================================================
+INTERFACE					*vim-battery-interface*
+
+-----------------------------------------------------------------------------
+FUNCTIONS					*vim-battery-functions*
+
+					*battery#backend()*
+battery#backend()
+	Return a battery backend specified by |g:battery#backend|.
+
+					*battery#update()*
+battery#update()
+	Call external program if no update process is executed and update the
+	internal information.
+	It is automatically called every |g:battery#interval| milliseconds
+	when |battery#watch()| has called.
+
+					*battery#value()*
+battery#value()
+	Return a current battery percentage.
+	Note that the value is a cached value which was retrieved by
+	|battery#update()| function.
+
+					*battery#is_charging()*
+battery#is_charging()
+	Return 1 if a AC power is plugged. Otherwise 0.
+	Note that the value is a cached value which was retrieved by
+	|battery#update()| function.
+
+					*battery#indicator()*
+battery#indicator()
+	Return a battery indicator bar looks like ██░░░.
+	Note that the value is a cached value which was retrieved by
+	|battery#update()| function.
+	The character and width used is determined by |g:battery#fillchar|,
+	|g:battery#nullchar|, and |g:battery#barwidth|.
+
+					*battery#watch()*
+battery#watch()
+	Start a timer to automatically call |battery#update()| if no timer has
+	started.
+	The interval is determined by |g:battery#interval|.
+	Note that this function is automatically called on startup when
+	|g:battery#watch_on_startup| is specified.
+
+					*battery#unwatch()*
+battery#unwatch()
+	Stop an existing timer. Do nothing if there is no timer.
+
+					*battery#component()*
+battery#component()
+	Return a battery component looks like ♥ 50% ██░░░.
+	The format is determined by |g:battery#charging_format| and
+	|g:battery#not_charging_format|.
+
+-----------------------------------------------------------------------------
+VARIABLES					*vim-battery-variables*
+
+					*g:battery#backend*
+g:battery#backend
+	A backend used to retrieve the battery information.
+	It is automatically determined if user has not explicitly specified.
+	Currently the following backends are available.
+	"pmset"		For Mac OS X
+	"ioreg"		For Mac OS X
+
+					*g:battery#interval*
+g:battery#interval
+	A millisecond interval used to update the battery information when
+	|battery#watch| has called. Make this larger if you feel the plugin
+	interrupt the performance.
+	Default is 1000.
+
+					*g:battery#update_tabline*
+g:battery#update_tabline
+	1 to update tabline when the battery information has retrieved.
+	It is required to immediately update your tabline whenever the battery
+	information has retrieved.
+	Default is 1.
+
+					*g:battery#update_statusline*
+g:battery#update_statusline
+	1 to update statusline when the battery information has retrieved.
+	It is required to immediately update your statusline whenever the
+	battery information has retrieved.
+	Default is 1.
+
+					*g:battery#charging_format*
+g:battery#charging_format
+	A format used in |battery#component()|. The followings are available.
+	"%p"	Percentage
+	"%b"	Indicator
+	Default is ♥ %p% %b
+
+					*g:battery#not_charging_format*
+g:battery#not_charging_format
+	A format used in |battery#component()|. The followings are available.
+	"%p"	Percentage
+	"%b"	Indicator
+	Default is ♡ %p% %b
+
+					*g:battery#fillchar*
+g:battery#fillchar
+	A character used in |battery#indicator()|.
+	Default is █
+
+					*g:battery#nonechar*
+g:battery#nonechar
+	A character used in |battery#indicator()|.
+	Default is ░
+
+					*g:battery#barwidth*
+g:battery#barwidth
+	The number of characters used in |battery#indicator()|.
+	Default is 5
+
+					*g:battery#watch_on_startup*
+g:battery#watch_on_startup
+	1 to automatically call |battery#watch()| on startup.
+	Default is 1
+
+
+=============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
