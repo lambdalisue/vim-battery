@@ -59,3 +59,10 @@ let g:lightline = {
 ```
 
 See more detail on [battery.txt](./doc/battery.txt)
+
+
+Reference
+-------------------------------------------------------------------------------
+
+- https://github.com/Code-Hex/battery
+- https://github.com/b4b4r07/dotfiles
