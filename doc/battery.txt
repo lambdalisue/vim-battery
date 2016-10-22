@@ -20,8 +20,8 @@ Interface			|battery-interface|
 INTRODUCTION					*battery-introduction*
 
 *battery.vim* is a |statusline| or |tabline| component for Neovim/Vim.
-It uses a job feature of Neovim/Vim to retrieve wifi informations so that the
-plugin won't block the main thread.
+It uses a job feature of Neovim/Vim to retrieve battery informations so that
+the plugin won't block the main thread.
 
 NOTE: Only for Mac OS X. PR is welcom.
 
@@ -76,17 +76,17 @@ battery#update()
 					*battery#value()*
 battery#value()
 	Return a current battery percentage.
-	Note that the value is a cached value from |wifi#update()|.
+	Note that the value is a cached value from |battery#update()|.
 
 					*battery#is_charging()*
 battery#is_charging()
 	Return 1 if an AC power is plugged. Otherwise 0.
-	Note that the value is a cached value from |wifi#update()|.
+	Note that the value is a cached value from |battery#update()|.
 
 					*battery#sign()*
-wifi#sign()
+battery#sign()
 	Return a unicode sign indicating if an AC power is plugged.
-	Note that the sign is built from a cached value from |wifi#update()|.
+	Note that the sign is built from a cached value from |battery#update()|.
 	See also |g:battery#symbol_charging| or |g:battery#symbol_discharging|.
 
 	Sttus		Sign~
@@ -97,7 +97,7 @@ wifi#sign()
 battery#graph()
 	Return a battery indicator bar looks like ██░░░.
 	Return a unicode graph indicating the value which looks like "██░░░".
-	Note that the graph is built from a cached value from |wifi#update()|.
+	Note that the graph is built from a cached value from |battery#update()|.
 	See also |g:battery#graph_symbol_fill|, |g:battery#graph_symbol_null|
 	or |g:battery#graph_width|.
 
