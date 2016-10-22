@@ -6,6 +6,7 @@ battery.vim
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Doc](https://img.shields.io/badge/doc-%3Ah%20battery-orange.svg?style=flat-square)](doc/battery.txt)
 
+![battery.vim in tabline](https://photos-6.dropbox.com/t/2/AABsMlzdOJ2vc2YukhntmqzxT5ogJXpd12a20mmhvjW8Bw/12/1529319/png/32x32/1/_/1/2/Screenshot%202016-10-22%2019.40.09.png/EIe6oQEYlYPs2gQgAigC/G4NUU0h7vuh7Ulnu1wgZobKIjFxsH7QmBaEhSIeWyZg?size=1024x768&size_mode=3)
 
 *battery.vim* is a `statusline` or `tabline` component for Neovim/Vim.
 It uses a job feature of Neovim/Vim to retrieve wifi informations so that the plugin won't block the main thread.
