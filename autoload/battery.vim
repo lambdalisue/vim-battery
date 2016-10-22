@@ -22,12 +22,20 @@ function! battery#is_charging() abort
   return backend.is_charging
 endfunction
 
-function! battery#indicator() abort
+function! battery#sign() abort
   let backend = battery#backend()
-  let n = round(backend.value / (100.0 / g:battery#barwidth))
+  return backend.is_charging
+        \ ? g:battery#symbol_charging
+        \ : g:battery#symbol_discharging
+endfunction
+
+function! battery#graph() abort
+  let backend = battery#backend()
+  let nf = float2nr(round(backend.value / (100.0 / g:battery#graph_width)))
+  let nn = g:battery#graph_width - nf
   return printf('%s%s',
-        \ repeat(g:battery#fillchar, float2nr(n)),
-        \ repeat(g:battery#nonechar, g:battery#barwidth - float2nr(n)),
+        \ repeat(g:battery#graph_symbol_fill, nf),
+        \ repeat(g:battery#graph_symbol_null, nn),
         \)
 endfunction
 
@@ -50,13 +58,11 @@ function! battery#component() abort
   if backend.value == -1
     return ''
   endif
-  if backend.is_charging
-    let format = g:battery#charging_format
-  else
-    let format = g:battery#not_charging_format
-  endif
-  let format = substitute(format, '%p', backend.value, 'g')
-  let format = substitute(format, '%b', battery#indicator(), 'g')
+  let format = g:battery#component_format
+  let format = substitute(format, '%v', backend.value, 'g')
+  let format = substitute(format, '%s', battery#sign(), 'g')
+  let format = substitute(format, '%g', battery#graph(), 'g')
+  let format = substitute(format, '%\([^%]\)', '\1', 'g')
   let format = substitute(format, '%%', '%', 'g')
   return format
 endfunction
@@ -73,7 +79,7 @@ endfunction
 function! s:watch_callback(...) abort
   call battery#update()
   let s:timer = timer_start(
-        \ g:battery#interval,
+        \ g:battery#update_interval,
         \ function('s:watch_callback')
         \)
 endfunction
@@ -100,19 +106,13 @@ endfunction
 
 call s:define('g:battery', {
       \ 'backend': s:get_available_backend(),
-      \ 'interval': 1000,
-      \ 'update_tabline': 1,
-      \ 'update_statusline': 1,
-      \ 'charging_format': '♥ %p% %b',
-      \ 'not_charging_format': '♡ %p% %b',
-      \ 'fillchar': '█',
-      \ 'nonechar': '░',
-      \ 'barwidth': 5,
-      \ 'watch_on_startup': 1,
+      \ 'update_interval': 30000,
+      \ 'update_tabline': 0,
+      \ 'update_statusline': 0,
+      \ 'component_format': '%s %v%% %g',
+      \ 'symbol_charging': '♥',
+      \ 'symbol_discharging': '♡',
+      \ 'graph_symbol_fill': '█',
+      \ 'graph_symbol_null': '░',
+      \ 'graph_width': 5,
       \})
-
-if g:battery#watch_on_startup
-  call battery#watch()
-endif
-
-
