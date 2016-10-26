@@ -90,7 +90,7 @@ function! s:get_available_backend() abort
   elseif executable('ioreg')
     return 'ioreg'
   endif
-  return ''
+  return 'dummy'
 endfunction
 
 function! s:define(prefix, default) abort
