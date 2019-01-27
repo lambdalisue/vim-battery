@@ -89,6 +89,8 @@ function! s:get_available_backend() abort
     return 'pmset'
   elseif executable('ioreg')
     return 'ioreg'
+  elseif executable('powershell.exe')
+    return 'powershell'
   endif
   return 'dummy'
 endfunction
