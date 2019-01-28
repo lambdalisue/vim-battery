@@ -14,26 +14,21 @@ let s:callback_count = 0
 " mode0: charging indicator will be on when ac adopter is connected
 " mode1: charging indicator will be on only when battery is charging
 let s:mode = 1
+let s:charge_pattern = s:mode == 0 ? 'Online' : 'Charging'
 
 function! s:powershell.run_if_not_running()
   if battery#job#is_alive(self.job)
     return
   endif
-  let options = {}
-  let options.err_cb = function('s:on_stderr', [self])
-  let self.job = job_start('powershell.exe -NoLogo -NonInteractive -NoExit -Command "function prompt() {''#''} Add-Type -Assembly System.Windows.Forms"', options)
+  let self.job = battery#job#start('powershell.exe -NoLogo -NonInteractive -NoExit -Command "function prompt() {''#''} Add-Type -Assembly System.Windows.Forms"', self)
 endfunction
 
-function! s:on_stderr(inst, channel, msg)
-  call a:inst.on_stderr(a:msg)
-endfunction
-function! s:powershell.on_stderr(msg)
+function! s:powershell.on_stderr(job, data, event) abort
+  let l:msg = get(a:data,0)
   if s:callback_count == s:mode
-    let self.is_charging = a:msg =~ 'Online'
-  elseif s:callback_count == s:mode
-    let self.is_charging = a:msg =~ 'Charging'
+    let self.is_charging = l:msg =~ s:charge_pattern
   elseif s:callback_count == 2
-    let self.value = float2nr(100 * str2float(a:msg))
+    let self.value = float2nr(100 * str2float(l:msg))
   endif
 
   if s:callback_count == 2
@@ -60,7 +55,6 @@ function! s:powershell.on_stdout(job, data, event) abort
 endfunction
 
 function! s:powershell.on_exit(...) abort
-  " this function will never be called ?
   if type(self.callback) == s:t_funcref
     call self.callback()
   endif

@@ -16,6 +16,9 @@ else
     if has_key(a:options, 'on_stdout')
       let options.out_cb = function('s:out_cb', [a:options])
     endif
+    if has_key(a:options, 'on_stderr')
+      let options.err_cb = function('s:err_cb', [a:options])
+    endif
     if has_key(a:options, 'on_exit')
       let options.exit_cb = function('s:exit_cb', [a:options])
     endif
@@ -34,6 +37,14 @@ else
     call call(
           \ a:instance.on_stdout,
           \ [a:channel, split(a:msg, '\r\?\n'), 'stdout'],
+          \ a:instance,
+          \)
+  endfunction
+
+  function! s:err_cb(instance, channel, msg) abort
+    call call(
+          \ a:instance.on_stderr,
+          \ [a:channel, split(a:msg, '\r\?\n'), 'stderr'],
           \ a:instance,
           \)
   endfunction
