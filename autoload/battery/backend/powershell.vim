@@ -1,71 +1,58 @@
-" Ref:  https://github.com/b4b4r07/dotfiles/blob/master/bin/battery
-let s:t_funcref = type(function('tr'))
+let s:Job = vital#battery#import('System.Job')
 
-let s:powershell = {
-      \ 'job': 0,
-      \ 'data': [],
-      \ 'value': -1,
-      \ 'is_charging': -1,
-      \ 'callback': 0,
-      \}
+function! s:powershell_update() abort dict
+  call self._run_if_not_running()
+  if type(self.job) is# v:t_dict && self.job.status() ==# 'run'
+    call self.job.send("[System.Console]::Error.WriteLine('i' + [System.Windows.Forms.SystemInformation]::PowerStatus.PowerLineStatus)\n")
+    call self.job.send("[System.Console]::Error.WriteLine('v' + [System.Windows.Forms.SystemInformation]::PowerStatus.BatteryLifePercent)\n")
+  endif
+endfunction
 
-let s:callback_count = 0
-
-" mode 0: charging indicator will light up when ac adopter is connected
-" mode 1: charging indicator will light up only when battery is charging
-let s:mode = 1
-let s:mode_0 = 'Online'
-let s:mode_1 = 'Charging'
-
-function! s:powershell.run_if_not_running()
-  if battery#job#is_alive(self.job)
+function! s:powershell_run_if_not_running() abort dict
+  if type(self.job) is# v:t_dict && self.job.status() ==# 'run'
     return
   endif
-  let options = {}
-  let options.err_cb = function('s:on_stderr', [self])
-  let self.job = job_start('powershell.exe -NoLogo -NonInteractive -NoExit -Command "function prompt() {''#''} Add-Type -Assembly System.Windows.Forms"', options)
+  let args = [
+        \ 'powershell.exe',
+        \ '-NoLogo',
+        \ '-NonInteractive',
+        \ '-NoExit',
+        \ '-Command',
+        \ 'function prompt() {''#''} Add-Type -Assembly System.Windows.Forms',
+        \]
+  let buffer = ['']
+  let self.job = s:Job.start(args, {
+        \ 'on_stderr': funcref('s:on_stderr', [buffer], self),
+        \})
 endfunction
 
-function! s:on_stderr(inst, channel, msg)
-  call a:inst.on_stderr(a:msg)
-endfunction
-function! s:powershell.on_stderr(msg)
-  if s:callback_count == s:mode
-    let self.is_charging = a:msg =~ ( s:mode == 0 ? s:mode_0 : s:mode_1 )
-  elseif s:callback_count == 2
-    let self.value = float2nr(100 * str2float(a:msg))
-  endif
-
-  if s:callback_count == 2
-    let s:callback_count = 0
-  else
-    let s:callback_count = s:callback_count + 1
-  endif
-
-endfunction
-
-
-function! s:powershell.update() abort
-  if s:callback_count != 0
+function! s:on_stderr(buffer, data) abort dict
+  let a:buffer[-1] .= a:data[0]
+  call extend(a:buffer, a:data[1:])
+  if len(a:buffer) is# 1
     return
   endif
-  call s:powershell.run_if_not_running()
-  let l:channel = job_getchannel(self.job)
-  call ch_sendraw(l:channel, '[System.Windows.Forms.SystemInformation]::PowerStatus | %{echo $_.PowerLineStatus; echo $_.BatteryChargeStatus; echo $_.BatteryLifePercent} | %{[System.Console]::Error.WriteLine($_)}')
-  call ch_sendraw(l:channel, "\n")
-endfunction
-
-function! s:powershell.on_stdout(job, data, event) abort
-  " ignore all outputs of stdout because powershell cannot hide the prompt(PS>)
-endfunction
-
-function! s:powershell.on_exit(...) abort
-  if type(self.callback) == s:t_funcref
+  for line in remove(a:buffer, 0, -2)
+    let key = line[0]
+    let value = line[1:]
+    if key ==# 'i'
+      let self.is_charging = value =~# 'Online'
+    elseif key ==# 'v'
+      let self.value = float2nr(100 * str2float(value))
+    endif
+  endfor
+  if type(self.callback) == v:t_func
     call self.callback()
   endif
 endfunction
 
-
 function! battery#backend#powershell#define() abort
-  return s:powershell
+  return {
+        \ 'job': 0,
+        \ 'value': -1,
+        \ 'is_charging': -1,
+        \ 'callback': 0,
+        \ 'update': funcref('s:powershell_update'),
+        \ '_run_if_not_running': funcref('s:powershell_run_if_not_running'),
+        \}
 endfunction
