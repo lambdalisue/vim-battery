@@ -1,6 +1,6 @@
 *battery.txt*	A statusline/tabline component of Battery information
 
-Version: 0.1.0
+Version: 0.2.0
 Author:  Alisue <lambdalisue@hashnote.net>
 Support: Neovim 0.1.6 or above
 Support: Vim 8.0 or above
@@ -23,7 +23,7 @@ INTRODUCTION					*battery-introduction*
 It uses a job feature of Neovim/Vim to retrieve battery informations so that
 the plugin won't block the main thread.
 
-NOTE: Only for Mac OS X. PR is welcom.
+NOTE: Works on macOS and Windows. PR for Linux is welcome.
 
 The implementation was translated to Vim script from a Bash script found on
 https://github.com/b4b4r07/dotfiles/blob/master/bin/battery.
