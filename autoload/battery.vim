@@ -91,6 +91,8 @@ function! s:get_available_backend() abort
     return 'ioreg'
   elseif executable('powershell.exe')
     return 'powershell'
+  elseif battery#backend#linux#is_available()
+    return 'linux'
   endif
   return 'dummy'
 endfunction
