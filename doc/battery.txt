@@ -90,7 +90,7 @@ battery#sign()
 	See also |g:battery#symbol_charging| or |g:battery#symbol_discharging|.
 
 	Sttus		Sign~
-	Discharging	|g:battry#symbol_charging|
+	Discharging	|g:battery#symbol_charging|
 	Charging	|g:battery#symbol_discharging|
 
 					*battery#graph()*
@@ -176,7 +176,7 @@ g:battery#component_format
 	A string format used in |battery#component()|.
 
 	Character	Represent~
-	%v		A value of the battry
+	%v		A value of the battery
 	%s		A sign indicating if an AC power is plugged
 	%g		A graph
 	%x		x
