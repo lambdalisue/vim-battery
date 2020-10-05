@@ -23,8 +23,6 @@ INTRODUCTION					*battery-introduction*
 It uses a job feature of Neovim/Vim to retrieve battery informations so that
 the plugin won't block the main thread.
 
-NOTE: Works on macOS and Windows. PR for Linux is welcome.
-
 The implementation was translated to Vim script from a Bash script found on
 https://github.com/b4b4r07/dotfiles/blob/master/bin/battery.
 
@@ -144,6 +142,8 @@ g:battery#backend
 	dummy		A dummy backend which does nothing
 	pmset		For Mac OS X
 	ioreg		For Mac OS X
+	linux		For Linux
+	powershell	For Windows
 
 					*g:battery#update_interval*
 g:battery#update_interval
