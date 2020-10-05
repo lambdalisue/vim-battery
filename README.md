@@ -1,5 +1,5 @@
-battery.vim
-==============================================================================
+# battery.vim
+
 ![Version 0.2.0](https://img.shields.io/badge/version-0.2.0-yellow.svg?style=flat-square)
 ![Support Neovim 0.2.0 or above](https://img.shields.io/badge/support-Neovim%200.2.0%20or%20above-green.svg?style=flat-square)
 ![Support Vim 8.0.0027 or above](https://img.shields.io/badge/support-Vim%208.0.0027%20or%20above-yellowgreen.svg?style=flat-square)
@@ -9,15 +9,14 @@ battery.vim
 
 ![battery.vim in tabline](https://media.githubusercontent.com/media/lambdalisue/screenshots/master/battery.vim/tabline_with_lightline.png)
 
-*battery.vim* is a `statusline` or `tabline` component for Neovim/Vim.
+_battery.vim_ is a `statusline` or `tabline` component for Neovim/Vim.
 It uses a job feature of Neovim/Vim to retrieve battery informations so that the plugin won't block the main thread.
-
-It works on macOS and Windows. Any PR of implementations for Linux are welcome.
+It supports macOS, Windows, and Linux.
 
 The implementation was translated to Vim script from a Bash script found on https://github.com/b4b4r07/dotfiles/blob/master/bin/battery.
 
-Install
--------------------------------------------------------------------------------
+## Install
+
 Use [junegunn/vim-plug] or [Shougo/dein.vim] like:
 
 ```vim
@@ -31,11 +30,9 @@ call dein#add('lambdalisue/battery.vim')
 Or copy contents of the repository into your runtimepath manually.
 
 [junegunn/vim-plug]: https://github.com/junegunn/vim-plug
-[Shougo/dein.vim]: https://github.com/Shougo/dein.vim
+[shougo/dein.vim]: https://github.com/Shougo/dein.vim
 
-
-Usage
--------------------------------------------------------------------------------
+## Usage
 
 Use `battery#component()` like:
 
@@ -66,8 +63,6 @@ let g:battery#update_tabline = 1    " For tabline.
 let g:battery#update_statusline = 1 " For statusline.
 ```
 
-
-See also
--------------------------------------------------------------------------------
+## See also
 
 - [lambdalisue/wifi.vim](https://github.com/lambdalisue/wifi.vim)
