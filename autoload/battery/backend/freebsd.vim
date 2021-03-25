@@ -15,18 +15,33 @@
 let s:bat_status = 'hw.acpi.battery.state'
 let s:bat_capacity = 'hw.acpi.battery.life'
 
-function! s:read_sysctl(ctl) abort
-  let cmd = 'sysctl -n ' . a:ctl
-  return system(cmd)
-endfunction
+let s:Job = vital#battery#import('System.Job')
 
 function! s:freebsd_update() abort dict
-  let self.is_charging = s:read_sysctl(s:bat_status)
-  let self.value = s:read_sysctl(s:bat_capacity) + 0
+  if type(self.job) is# v:t_dict && self.job.status() ==# 'run'
+    return
+  endif
+  let data = []
+  let args = ['sysctl', '-n', s:bat_status, s:bat_capacity]
+  let self.job = s:Job.start(args, {
+        \ 'on_stdout': funcref('s:on_stdout', [data]),
+        \ 'on_exit': funcref('s:on_exit', [self, data]),
+        \})
+endfunction
+
+function! s:on_stdout(buffer, data) abort
+  call extend(a:buffer, a:data)
+endfunction
+
+function! s:on_exit(backend, buffer, exitval) abort
+  let content = join(a:buffer, '')
+  let a:backend.is_charging = content.getline(0) !=# 'NOT_CHARGING'
+  let a:backend.value = content.getline(1) + 0
 endfunction
 
 function! battery#backend#freebsd#define() abort
   return {
+   	\ 'job': 0,
         \ 'value': -1,
         \ 'is_charging': -1,
         \ 'update': funcref('s:freebsd_update'),
