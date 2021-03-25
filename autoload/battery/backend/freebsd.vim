@@ -17,13 +17,15 @@ let s:bat_capacity = 'hw.acpi.battery.life'
 
 let s:Job = vital#battery#import('System.Job')
 
+let s:job = v:null
+
 function! s:freebsd_update() abort dict
-  if type(self.job) is# v:t_dict && self.job.status() ==# 'run'
+  if type(s:job) is# v:t_dict && s:job.status() ==# 'run'
     return
   endif
   let data = []
   let args = ['sysctl', '-n', s:bat_status, s:bat_capacity]
-  let self.job = s:Job.start(args, {
+  let s:job = s:Job.start(args, {
         \ 'on_stdout': funcref('s:on_stdout', [data]),
         \ 'on_exit': funcref('s:on_exit', [self, data]),
         \})
@@ -40,7 +42,6 @@ endfunction
 
 function! battery#backend#freebsd#define() abort
   return {
-   	\ 'job': 0,
         \ 'value': -1,
         \ 'is_charging': -1,
         \ 'update': funcref('s:freebsd_update'),
