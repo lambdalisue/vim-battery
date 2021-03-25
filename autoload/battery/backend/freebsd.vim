@@ -12,10 +12,10 @@
 " hw.acpi.battery.time: remaining time in minutes
 " hw.acpi.battery.life: percent capacity remaining
 
-let s:bat_status = 'hw.acpi.battery.state'
-let s:bat_capacity = 'hw.acpi.battery.life'
-
 let s:Job = vital#battery#import('System.Job')
+
+let s:BAT_STATUS = 'hw.acpi.battery.state'
+let s:BAT_CAPACITY = 'hw.acpi.battery.life'
 
 let s:job = v:null
 
@@ -24,7 +24,7 @@ function! s:freebsd_update() abort dict
     return
   endif
   let data = []
-  let args = ['sysctl', '-n', s:bat_status, s:bat_capacity]
+  let args = ['sysctl', '-n', s:BAT_STATUS, s:BAT_CAPACITY]
   let s:job = s:Job.start(args, {
         \ 'on_stdout': funcref('s:on_stdout', [data]),
         \ 'on_exit': funcref('s:on_exit', [self, data]),
@@ -50,5 +50,5 @@ function! battery#backend#freebsd#define() abort
 endfunction
 
 function! battery#backend#freebsd#is_available() abort
-  return !empty(s:bat_status) && !empty(s:bat_capacity)
+  return executable('sysctl')
 endfunction
