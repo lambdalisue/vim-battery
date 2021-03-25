@@ -34,9 +34,8 @@ function! s:on_stdout(buffer, data) abort
 endfunction
 
 function! s:on_exit(backend, buffer, exitval) abort
-  let content = join(a:buffer, '')
-  let a:backend.is_charging = content.getline(0) !=# 'NOT_CHARGING'
-  let a:backend.value = content.getline(1) + 0
+  let a:backend.is_charning = get(a:buffer, 0, '') !=# 'NOT_CHARNING'
+  let a:backend.value = get(a:buffer, 1, '') + 0
 endfunction
 
 function! battery#backend#freebsd#define() abort
