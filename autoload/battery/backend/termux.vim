@@ -19,7 +19,7 @@ endfunction
 
 function! s:on_exit(backend, buffer, exitval) abort
   let content = join(a:buffer, '')
-  let a:backend.is_charging = json_decode(content).status !=# 'DISCHARGING'
+  let a:backend.is_charging = json_decode(content).status !=# 'NOT_CHARGING' || 'DISCHARGING'
   let a:backend.value = json_decode(content).percentage + 0
 endfunction
 

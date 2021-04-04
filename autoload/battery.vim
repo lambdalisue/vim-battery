@@ -97,7 +97,6 @@ function! s:get_available_backend() abort
     return 'termux'
   elseif battery#backend#freebsd#is_available()
     return 'freebsd'
-
   endif
   return 'dummy'
 endfunction
