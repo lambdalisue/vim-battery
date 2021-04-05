@@ -18,12 +18,10 @@ function! s:on_stdout(buffer, data) abort
 endfunction
 
 function! s:on_exit(backend, buffer, exitval) abort
-	let g:bat_status_list = ['NOT_CHARGING' , 'DISCHARGING']
-  let content = join(a:buffer, '')
-	if index(g:bat_status_list, json_decode(content).status) >= 0
-		let a:backend.is_charging = 0
-	endif
-  let a:backend.value = json_decode(content).percentage + 0
+  let obj = json_decode(join(a:buffer, ''))
+  let status = get(obj, 'status', '')
+  let a:backend.is_charging = !(status ==# 'NOT_CHARGING' || status ==# 'DISCHARGING')
+  let a:backend.value = get(obj, 'percentage', 0) + 0
 endfunction
 
 function! battery#backend#termux#define() abort
