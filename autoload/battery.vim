@@ -93,10 +93,10 @@ function! s:get_available_backend() abort
     return 'powershell'
   elseif battery#backend#linux#is_available()
     return 'linux'
-  elseif battery#backend#freebsd#is_available()
-    return 'freebsd'
   elseif battery#backend#termux#is_available()
     return 'termux'
+  elseif battery#backend#freebsd#is_available()
+    return 'freebsd'
   endif
   return 'dummy'
 endfunction

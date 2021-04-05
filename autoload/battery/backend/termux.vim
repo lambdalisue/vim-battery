@@ -18,9 +18,10 @@ function! s:on_stdout(buffer, data) abort
 endfunction
 
 function! s:on_exit(backend, buffer, exitval) abort
-  let content = join(a:buffer, '')
-  let a:backend.is_charging = json_decode(content).status !=# 'NOT_CHARGING'
-  let a:backend.value = json_decode(content).percentage + 0
+  let obj = json_decode(join(a:buffer, ''))
+  let status = get(obj, 'status', '')
+  let a:backend.is_charging = !(status ==# 'NOT_CHARGING' || status ==# 'DISCHARGING')
+  let a:backend.value = get(obj, 'percentage', 0) + 0
 endfunction
 
 function! battery#backend#termux#define() abort
