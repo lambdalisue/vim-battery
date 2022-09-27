@@ -31,12 +31,9 @@ endfunction
 
 function! battery#graph() abort
   let backend = battery#backend()
-  let nf = float2nr(round(backend.value / (100.0 / g:battery#graph_width)))
-  let nn = g:battery#graph_width - nf
-  return printf('%s%s',
-        \ repeat(g:battery#graph_symbol_fill, nf),
-        \ repeat(g:battery#graph_symbol_null, nn),
-        \)
+  let width = len(g:battery#graph_indicators)
+  let index = float2nr(floor(backend.value / (100.0 / width))) - 1
+  return g:battery#graph_indicators[index]
 endfunction
 
 function! battery#watch() abort
@@ -117,10 +114,43 @@ call s:define('g:battery', {
       \ 'update_interval': 30000,
       \ 'update_tabline': 0,
       \ 'update_statusline': 0,
-      \ 'component_format': '%s %v%% %g',
+      \ 'component_format': '%s %v%%%% %g',
       \ 'symbol_charging': '♥',
       \ 'symbol_discharging': '♡',
-      \ 'graph_symbol_fill': '█',
-      \ 'graph_symbol_null': '░',
-      \ 'graph_width': 5,
+      \ 'graph_indicators': [
+      \   '░░░░░',
+      \   '█░░░░',
+      \   '██░░░',
+      \   '███░░',
+      \   '████░',
+      \   '█████',
+      \ ],
       \})
+
+" DEPRECATED warning messages
+
+function! s:deprecated(name, alternative) abort
+  if !exists(a:name)
+    return
+  endif
+  echohl WarningMsg
+  echomsg printf(
+        \ '[battery] "%s" is DEPRECATED and has no effect. Use "%s" instead.',
+        \ a:name,
+        \ a:alternative,
+        \)
+  echohl None
+endfunction
+
+call s:deprecated(
+      \ 'g:battery#graph_symbol_fill',
+      \ 'g:battery#graph_indicators',
+      \)
+call s:deprecated(
+      \ 'g:battery#graph_symbol_null',
+      \ 'g:battery#graph_indicators',
+      \)
+call s:deprecated(
+      \ 'g:battery#graph_width',
+      \ 'g:battery#graph_indicators',
+      \)

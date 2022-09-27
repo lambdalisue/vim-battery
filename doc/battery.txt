@@ -1,6 +1,5 @@
 *battery.txt*	A statusline/tabline component of Battery information
 
-Version: 0.2.0
 Author:  Alisue <lambdalisue@hashnote.net>
 Support: Neovim 0.1.6 or above
 Support: Vim 8.0 or above
@@ -96,8 +95,7 @@ battery#graph()
 	Return a battery indicator bar looks like ██░░░.
 	Return a unicode graph indicating the value which looks like "██░░░".
 	Note that the graph is built from a cached value from |battery#update()|.
-	See also |g:battery#graph_symbol_fill|, |g:battery#graph_symbol_null|
-	or |g:battery#graph_width|.
+	See |g:battery#graph_indicators| to change looks of the graph.
 
 	Value		Graph (Default)~
 	0		░░░░░
@@ -182,22 +180,42 @@ g:battery#component_format
 	%x		x
 	%%		%
 
-	Default is "%s %v%% %g"
+	Default is "%s %v%%%% %g"
 
+					*g:battery#graph_indicators*
+g:battery#graph_indicators
+	A |List| of |String| that indicate the current battery status as a
+	graph.
+
+	Use the following with nerd font.
+>
+	let g:battery#graph_indicators = [
+	      \ '',
+	      \ '',
+	      \ '',
+	      \ '',
+	      \ '',
+	      \]
+<
+	Default value is the following
+>
+	let g:battery#graph_indicators = [
+	      \ '░░░░░',
+	      \ '█░░░░',
+	      \ '██░░░',
+	      \ '███░░',
+	      \ '████░',
+	      \ '█████',
+	      \]
+<
 					*g:battery#graph_symbol_fill*
-g:battery#graph_symbol_fill
-	A character used to indicate a fill reagion in |battery#graph()|.
-	Default is "█"
-
 					*g:battery#graph_symbol_null*
-g:battery#graph_symbol_null
-	A character used to indicate a null reagion in |battery#graph()|.
-	Default is "░"
-
 					*g:battery#graph_width*
+g:battery#graph_symbol_fill
+g:battery#graph_symbol_null
 g:battery#graph_width
-	The number of characters used in |battery#graph()|.
-	Default is 5
+	DEPRECATED:
+	These configuration does nothing due to |g:battery#graph_indicators|.
 
 
 =============================================================================
