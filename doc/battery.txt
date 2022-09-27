@@ -182,7 +182,7 @@ g:battery#component_format
 	%x		x
 	%%		%
 
-	Default is "%s %v%% %g"
+	Default is "%s %v%%%% %g"
 
 					*g:battery#graph_symbol_fill*
 g:battery#graph_symbol_fill
