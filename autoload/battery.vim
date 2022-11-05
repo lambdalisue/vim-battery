@@ -64,6 +64,11 @@ function! battery#component() abort
   return format
 endfunction
 
+function! battery#component_escaped() abort
+  let component = battery#component()
+  return substitute(component, '%', '%%', 'g')
+endfunction
+
 function! s:update_callback() abort
   if g:battery#update_tabline
     let &tabline = &tabline
