@@ -114,7 +114,7 @@ call s:define('g:battery', {
       \ 'update_interval': 30000,
       \ 'update_tabline': 0,
       \ 'update_statusline': 0,
-      \ 'component_format': '%s %v%%%% %g',
+      \ 'component_format': '%s %v%% %g',
       \ 'symbol_charging': '♥',
       \ 'symbol_discharging': '♡',
       \ 'graph_indicators': [

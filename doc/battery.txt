@@ -175,7 +175,7 @@ g:battery#component_format
 	%x		x
 	%%		%
 
-	Default is "%s %v%%%% %g"
+	Default is "%s %v%% %g"
 
 					*g:battery#graph_indicators*
 g:battery#graph_indicators
