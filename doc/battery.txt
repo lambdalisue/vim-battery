@@ -1,10 +1,5 @@
 *battery.txt*	A statusline/tabline component of Battery information
 
-Author:  Alisue <lambdalisue@hashnote.net>
-Support: Neovim 0.1.6 or above
-Support: Vim 8.0 or above
-License: MIT license
-
 =============================================================================
 CONTENTS					*battery-contents*
 
