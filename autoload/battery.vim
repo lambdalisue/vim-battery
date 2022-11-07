@@ -64,6 +64,11 @@ function! battery#component() abort
   return format
 endfunction
 
+function! battery#component_escaped() abort
+  let component = battery#component()
+  return substitute(component, '%', '%%', 'g')
+endfunction
+
 function! s:update_callback() abort
   if g:battery#update_tabline
     let &tabline = &tabline
@@ -114,7 +119,7 @@ call s:define('g:battery', {
       \ 'update_interval': 30000,
       \ 'update_tabline': 0,
       \ 'update_statusline': 0,
-      \ 'component_format': '%s %v%%%% %g',
+      \ 'component_format': '%s %v%% %g',
       \ 'symbol_charging': '♥',
       \ 'symbol_discharging': '♡',
       \ 'graph_indicators': [

@@ -1,10 +1,5 @@
 *battery.txt*	A statusline/tabline component of Battery information
 
-Author:  Alisue <lambdalisue@hashnote.net>
-Support: Neovim 0.1.6 or above
-Support: Vim 8.0 or above
-License: MIT license
-
 =============================================================================
 CONTENTS					*battery-contents*
 
@@ -121,6 +116,19 @@ battery#component()
 	Return a battery component for |statusline| or |tabline| which looks
 	like "♥ 40% ██░░░".
 	Users can customize the format by |g:battery#component_format|.
+>
+	set statusline=%{battery#component()}
+<
+	See |battery#component_escaped()| for "%!" expression.
+
+					*battery#component_escaped()*
+battery#component_escaped()
+	Return a "%" escaped battery component that is suite for "%!"
+	expression that like  "♥ 40%% ██░░░".
+>
+	set statusline=%!battery#component_escaped()
+<
+	See |battery#component()| for "%{}" expression.
 
 -----------------------------------------------------------------------------
 VARIABLES					*battery-variables*
@@ -180,7 +188,7 @@ g:battery#component_format
 	%x		x
 	%%		%
 
-	Default is "%s %v%%%% %g"
+	Default is "%s %v%% %g"
 
 					*g:battery#graph_indicators*
 g:battery#graph_indicators
