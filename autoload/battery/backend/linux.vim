@@ -1,5 +1,5 @@
 " Ref: https://github.com/lambdalisue/battery.vim/issues/7
-let s:bat_dirs = '/sys/class/power_supply/{CMD*,BAT*,battery}'
+let s:bat_dirs = '/sys/class/power_supply/{CMD*,BAT*,CMB*,battery}'
 let s:bat_status = get(glob(s:bat_dirs . '/status', 0, 1), 0, '')
 let s:bat_capacity = get(glob(s:bat_dirs . '/capacity', 0, 1), 0, '')
 
