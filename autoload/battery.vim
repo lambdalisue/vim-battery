@@ -86,8 +86,13 @@ function! s:watch_callback(...) abort
         \)
 endfunction
 
+" NOTE:
+" It seems `executable()` is slow on some environment
+" so skip it if `g:battery#backend` is already defined
 function! s:get_available_backend() abort
-  if executable('pmset')
+  if exists('g:battery#backend')
+    return g:battery#backend
+  elseif executable('pmset')
     return 'pmset'
   elseif executable('ioreg')
     return 'ioreg'
