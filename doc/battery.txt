@@ -149,6 +149,8 @@ g:battery#backend
 	pmset		For Mac OS X
 	ioreg		For Mac OS X
 	linux		For Linux
+	termux		For Android
+	freebsd		For FreeBSD
 	powershell	For Windows
 
 					*g:battery#update_interval*
